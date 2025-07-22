@@ -1,0 +1,334 @@
+﻿@model IEnumerable<AICommunityPlatform.Models.JobApplication>
+@{
+    ViewData["Title"] = "My Applications";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">My Applications</h1>
+                    <p class="text-gray-600">Track your job applications and their status</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Jobs" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                        Browse Jobs
+                    </a>
+                    <a href="/Jobs/SavedJobs" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        Saved Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Applications</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count()</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Pending</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count(a => a.Status == AICommunityPlatform.Models.ApplicationStatus.Applied)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Interviews</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count(a => a.Status == AICommunityPlatform.Models.ApplicationStatus.Interview)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-purple-100 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Accepted</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count(a => a.Status == AICommunityPlatform.Models.ApplicationStatus.Accepted)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications List -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-900">Applications</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">All Status</option>
+                            <option value="Applied">Applied</option>
+                            <option value="Viewed">Viewed</option>
+                            <option value="Interview">Interview</option>
+                            <option value="Accepted">Accepted</option>
+                            <option value="Rejected">Rejected</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">Sort by</option>
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="status">Status</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                @foreach (var application in Model)
+                {
+                    <div class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <a href="/Jobs/Details/@application.Job.Id" class="hover:text-indigo-600">
+                                            @application.Job.Title
+                                        </a>
+                                    </h3>
+                                    <span class="status-badge @GetStatusClass(application.Status)">
+                                        @GetStatusIcon(application.Status)
+                                        @application.Status.ToString()
+                                    </span>
+                                </div>
+
+                                <p class="text-sm text-gray-600 mb-2">@application.Job.Organization.DisplayName</p>
+
+                                <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    @application.Job.Location
+
+                                    <span class="mx-2">•</span>
+
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                                    </svg>
+                                    @application.Job.Type.ToString()
+
+                                    <span class="mx-2">•</span>
+
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    Applied @application.AppliedDate.ToString("MMM dd, yyyy")
+                                </div>
+
+                                @if (!string.IsNullOrEmpty(application.CoverLetter))
+                                {
+                                    <div class="bg-gray-50 rounded-lg p-3 mb-3">
+                                        <p class="text-sm text-gray-600 font-medium mb-1">Cover Letter:</p>
+                                        <p class="text-sm text-gray-700">
+                                            @(application.CoverLetter.Length > 200 ? application.CoverLetter.Substring(0, 200) + "..." : application.CoverLetter)
+                                        </p>
+                                    </div>
+                                }
+
+                                @if (application.InterviewDate.HasValue)
+                                {
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                            <span class="text-sm font-medium text-blue-900">
+                                                Interview scheduled for @application.InterviewDate.Value.ToString("MMMM dd, yyyy 'at' h:mm tt")
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+
+                                @if (!string.IsNullOrEmpty(application.Notes))
+                                {
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
+                                        <p class="text-sm text-yellow-800">
+                                            <strong>Notes:</strong> @application.Notes
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+
+                            <div class="flex flex-col space-y-2 ml-4">
+                                <a href="/Jobs/Details/@application.Job.Id" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                    View Job
+                                </a>
+
+                                @if (application.Status == AICommunityPlatform.Models.ApplicationStatus.Applied || application.Status == AICommunityPlatform.Models.ApplicationStatus.Viewed)
+                                {
+                                    <button onclick="withdrawApplication(@application.Id)" class="text-red-600 hover:text-red-800 text-sm font-medium">
+                                        Withdraw
+                                    </button>
+                                }
+
+                                @if (application.Status == AICommunityPlatform.Models.ApplicationStatus.Interview)
+                                {
+                                    <button class="text-green-600 hover:text-green-800 text-sm font-medium">
+                                        Prep Tips
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (!Model.Any())
+                {
+                    <div class="p-12 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No applications yet</h3>
+                        <p class="text-gray-600 mb-4">Start applying to jobs that match your skills and interests.</p>
+                        <a href="/Jobs" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Browse Jobs
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetStatusClass(AICommunityPlatform.Models.ApplicationStatus status)
+    {
+        return status switch
+        {
+            AICommunityPlatform.Models.ApplicationStatus.Applied => "bg-yellow-100 text-yellow-800",
+            AICommunityPlatform.Models.ApplicationStatus.Viewed => "bg-blue-100 text-blue-800",
+            AICommunityPlatform.Models.ApplicationStatus.Interview => "bg-green-100 text-green-800",
+            AICommunityPlatform.Models.ApplicationStatus.Accepted => "bg-purple-100 text-purple-800",
+            AICommunityPlatform.Models.ApplicationStatus.Rejected => "bg-red-100 text-red-800",
+            AICommunityPlatform.Models.ApplicationStatus.Withdrawn => "bg-gray-100 text-gray-800",
+            _ => "bg-gray-100 text-gray-800"
+        };
+    }
+
+    private string GetStatusIcon(AICommunityPlatform.Models.ApplicationStatus status)
+    {
+        return status switch
+        {
+            AICommunityPlatform.Models.ApplicationStatus.Applied => "⏳",
+            AICommunityPlatform.Models.ApplicationStatus.Viewed => "👀",
+            AICommunityPlatform.Models.ApplicationStatus.Interview => "🎯",
+            AICommunityPlatform.Models.ApplicationStatus.Accepted => "✅",
+            AICommunityPlatform.Models.ApplicationStatus.Rejected => "❌",
+            AICommunityPlatform.Models.ApplicationStatus.Withdrawn => "↩️",
+            _ => "📝"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        function withdrawApplication(applicationId) {
+            if (confirm('Are you sure you want to withdraw this application?')) {
+                fetch('/Jobs/WithdrawApplication', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: JSON.stringify({ applicationId: applicationId })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showToast('Error withdrawing application', 'error');
+                    }
+                })
+                .catch(error => {
+                    showToast('Error withdrawing application', 'error');
+                });
+            }
+        }
+
+        function showToast(message, type) {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${colors[type]}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Filter functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusFilter = document.querySelector('select');
+            const sortFilter = document.querySelectorAll('select')[1];
+
+            // Add event listeners for filtering and sorting
+            statusFilter.addEventListener('change', function() {
+                // Implement filtering logic
+                console.log('Filter by status:', this.value);
+            });
+
+            sortFilter.addEventListener('change', function() {
+                // Implement sorting logic
+                console.log('Sort by:', this.value);
+            });
+        });
+    </script>
+
+    <style>
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+    </style>
+}

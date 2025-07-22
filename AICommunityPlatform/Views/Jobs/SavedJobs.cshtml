@@ -1,0 +1,368 @@
+﻿@model IEnumerable<AICommunityPlatform.Models.SavedJob>
+@{
+    ViewData["Title"] = "Saved Jobs";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Saved Jobs</h1>
+                    <p class="text-gray-600">Jobs you've saved for later review</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Jobs" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                        Browse Jobs
+                    </a>
+                    <a href="/Jobs/MyApplications" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        My Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-indigo-100 rounded-lg">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Saved</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count()</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">With Reminders</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count(s => s.ReminderDate.HasValue)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Jobs</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.Count(s => s.Job.IsActive)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Jobs List -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-semibold text-gray-900">Saved Jobs</h2>
+                    <div class="flex items-center space-x-4">
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">All Types</option>
+                            <option value="FullTime">Full Time</option>
+                            <option value="PartTime">Part Time</option>
+                            <option value="Contract">Contract</option>
+                            <option value="Internship">Internship</option>
+                        </select>
+                        <select class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                            <option value="">Sort by</option>
+                            <option value="newest">Recently Saved</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="reminder">Reminder Date</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divide-y divide-gray-200">
+                @foreach (var savedJob in Model)
+                {
+                    <div class="p-6 hover:bg-gray-50 transition-colors">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="text-lg font-medium text-gray-900">
+                                        <a href="/Jobs/Details/@savedJob.Job.Id" class="hover:text-indigo-600">
+                                            @savedJob.Job.Title
+                                        </a>
+                                    </h3>
+                                    <div class="flex items-center space-x-2">
+                                        @if (!savedJob.Job.IsActive)
+                                        {
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                Expired
+                                            </span>
+                                        }
+                                        @if (savedJob.ReminderDate.HasValue)
+                                        {
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                                Reminder Set
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <p class="text-sm text-gray-600 mb-2">@savedJob.Job.Organization.DisplayName</p>
+
+                                <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    </svg>
+                                    @savedJob.Job.Location
+
+                                    <span class="mx-2">•</span>
+
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                                    </svg>
+                                    @savedJob.Job.Type.ToString()
+
+                                    @if (savedJob.Job.Salary.HasValue)
+                                    {
+                                        <span class="mx-2">•</span>
+                                        <span>$@savedJob.Job.Salary.Value.ToString("N0")</span>
+                                    }
+
+                                    @if (savedJob.Job.IsRemote)
+                                    {
+                                        <span class="mx-2">•</span>
+                                        <span class="text-green-600">Remote</span>
+                                    }
+                                </div>
+
+                                <p class="text-sm text-gray-700 mb-3">
+                                    @(savedJob.Job.Description.Length > 150 ? savedJob.Job.Description.Substring(0, 150) + "..." : savedJob.Job.Description)
+                                </p>
+
+                                <div class="flex items-center text-xs text-gray-500 space-x-4">
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                        </svg>
+                                        Saved @savedJob.SavedDate.ToString("MMM dd, yyyy")
+                                    </div>
+
+                                    @if (savedJob.ReminderDate.HasValue)
+                                    {
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Reminder: @savedJob.ReminderDate.Value.ToString("MMM dd, yyyy")
+                                        </div>
+                                    }
+
+                                    @if (savedJob.Job.Deadline.HasValue)
+                                    {
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            Deadline: @savedJob.Job.Deadline.Value.ToString("MMM dd, yyyy")
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col space-y-2 ml-4">
+                                <div class="flex space-x-2">
+                                    <button onclick="setReminder(@savedJob.Id)" class="text-gray-400 hover:text-indigo-600 transition-colors" title="Set Reminder">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5H9l-5 5h5m0 0v1a3 3 0 11-6 0v-1m6 0V9a9 9 0 10-18 0v8m18 0V9a9 9 0 00-18 0v8"></path>
+                                        </svg>
+                                    </button>
+
+                                    <button onclick="removeSavedJob(@savedJob.Id)" class="text-gray-400 hover:text-red-600 transition-colors" title="Remove from Saved">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <a href="/Jobs/Details/@savedJob.Job.Id" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium text-center">
+                                    View Details
+                                </a>
+
+                                @if (savedJob.Job.IsActive)
+                                {
+                                    <button onclick="quickApply(@savedJob.Job.Id)" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md text-sm font-medium">
+                                        Quick Apply
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button disabled class="bg-gray-300 text-gray-500 px-3 py-1 rounded-md text-sm font-medium cursor-not-allowed">
+                                        Job Expired
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                @if (!Model.Any())
+                {
+                    <div class="p-12 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        <h3 class="text-lg font-medium text-gray-900 mb-2">No saved jobs yet</h3>
+                        <p class="text-gray-600 mb-4">Start saving jobs that interest you for easy access later.</p>
+                        <a href="/Jobs" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                            Browse Jobs
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reminder Modal -->
+<div id="reminderModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Set Reminder</h3>
+            <form id="reminderForm">
+                <input type="hidden" id="savedJobId" />
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Reminder Date</label>
+                    <input type="date" id="reminderDate" required
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+                </div>
+                <div class="flex justify-end space-x-3">
+                    <button type="button" onclick="closeReminderModal()" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
+                        Set Reminder
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function setReminder(savedJobId) {
+            document.getElementById('savedJobId').value = savedJobId;
+            document.getElementById('reminderModal').classList.remove('hidden');
+        }
+
+        function closeReminderModal() {
+            document.getElementById('reminderModal').classList.add('hidden');
+        }
+
+        function removeSavedJob(savedJobId) {
+            if (confirm('Are you sure you want to remove this job from saved jobs?')) {
+                fetch('/Jobs/RemoveSavedJob', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                    },
+                    body: JSON.stringify({ savedJobId: savedJobId })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showToast('Job removed from saved jobs', 'success');
+                        // Remove the job card from the DOM
+                        event.target.closest('.p-6').remove();
+                    } else {
+                        showToast('Error removing job', 'error');
+                    }
+                })
+                .catch(error => {
+                    showToast('Error removing job', 'error');
+                });
+            }
+        }
+
+        function quickApply(jobId) {
+            // Redirect to job details page with apply section focused
+            window.location.href = `/Jobs/Details/${jobId}#apply`;
+        }
+
+        function showToast(message, type) {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${colors[type]}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Handle reminder form submission
+        document.getElementById('reminderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const savedJobId = document.getElementById('savedJobId').value;
+            const reminderDate = document.getElementById('reminderDate').value;
+
+            fetch('/Jobs/SetReminder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                },
+                body: JSON.stringify({ savedJobId: savedJobId, reminderDate: reminderDate })
+            })
+            .then(response => {
+                if (response.ok) {
+                    showToast('Reminder set successfully', 'success');
+                    closeReminderModal();
+                    // Reload page to show updated reminder
+                    location.reload();
+                } else {
+                    showToast('Error setting reminder', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error setting reminder', 'error');
+            });
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('reminderModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeReminderModal();
+            }
+        });
+    </script>
+}

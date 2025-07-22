@@ -1,0 +1,421 @@
+﻿@model AICommunityPlatform.ViewModels.AdminCreateJobViewModel
+@{
+    ViewData["Title"] = "Create Job";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <nav class="flex mb-4" aria-label="Breadcrumb">
+                <ol class="flex items-center space-x-4">
+                    <li>
+                        <a asp-action="Index" class="text-gray-400 hover:text-gray-500">
+                            <svg class="flex-shrink-0 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L9 5.414V17a1 1 0 102 0V5.414l5.293 5.293a1 1 0 001.414-1.414l-7-7z"></path>
+                            </svg>
+                            <span class="sr-only">Admin</span>
+                        </a>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <a asp-action="Jobs" class="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700">Jobs</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 h-5 w-5 text-gray-300" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span class="ml-4 text-sm font-medium text-gray-500">Create Job</span>
+                        </div>
+                    </li>
+                </ol>
+            </nav>
+
+            <div class="md:flex md:items-center md:justify-between">
+                <div class="flex-1 min-w-0">
+                    <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                        Create New Job
+                    </h2>
+                    <p class="mt-1 text-sm text-gray-500">
+                        Create a new job posting for the platform
+                    </p>
+                </div>
+                <div class="mt-4 flex md:mt-0 md:ml-4">
+                    <a asp-action="Jobs" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                        <svg class="-ml-1 mr-2 h-5 w-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                        Back to Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success/Error Messages -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="mb-6 bg-green-50 border border-green-200 rounded-md p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-800">@TempData["Success"]</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <div asp-validation-summary="All" class="mb-6 bg-red-50 border border-red-200 rounded-md p-4 text-red-800 text-sm"></div>
+
+        <!-- Create Job Form -->
+        <form asp-action="CreateJob" method="post" class="space-y-8" id="createJobForm">
+            @Html.AntiForgeryToken()
+
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Basic Information</h3>
+
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                        <!-- Job Title -->
+                        <div class="sm:col-span-2">
+                            <label asp-for="Title" class="block text-sm font-medium text-gray-700">
+                                Job Title <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-1">
+                                <input asp-for="Title" type="text"
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="e.g., Senior AI Engineer">
+                            </div>
+                            <span asp-validation-for="Title" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Organization -->
+                        <div>
+                            <label asp-for="OrganizationId" class="block text-sm font-medium text-gray-700">
+                                Organization <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-1">
+                                <select asp-for="OrganizationId" asp-items="@(new SelectList(Model.Organizations, "Id", "DisplayName"))"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                    <option value="">Select an organization</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="OrganizationId" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Job Type -->
+                        <div>
+                            <label asp-for="Type" class="block text-sm font-medium text-gray-700">
+                                Job Type <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-1">
+                                <select asp-for="Type" asp-items="Html.GetEnumSelectList<JobType>()"
+                                        class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                                    <option value="">Select job type</option>
+                                </select>
+                            </div>
+                            <span asp-validation-for="Type" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Location -->
+                        <div>
+                            <label asp-for="Location" class="block text-sm font-medium text-gray-700">
+                                Location <span class="text-red-500">*</span>
+                            </label>
+                            <div class="mt-1">
+                                <input asp-for="Location" type="text"
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="e.g., San Francisco, CA">
+                            </div>
+                            <span asp-validation-for="Location" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Salary -->
+                        <div>
+                            <label asp-for="Salary" class="block text-sm font-medium text-gray-700">
+                                Salary (Annual USD)
+                            </label>
+                            <div class="mt-1 relative rounded-md shadow-sm">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <span class="text-gray-500 sm:text-sm">$</span>
+                                </div>
+                                <input asp-for="Salary" type="number"
+                                       class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-7 pr-12 sm:text-sm border-gray-300 rounded-md"
+                                       placeholder="120000">
+                            </div>
+                            <span asp-validation-for="Salary" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Remote Work -->
+                        <div class="sm:col-span-2">
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input asp-for="IsRemote" type="checkbox"
+                                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label asp-for="IsRemote" class="font-medium text-gray-700">Remote Work Available</label>
+                                    <p class="text-gray-500">This position can be performed remotely</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Application Deadline -->
+                        <div>
+                            <label asp-for="Deadline" class="block text-sm font-medium text-gray-700">
+                                Application Deadline
+                            </label>
+                            <div class="mt-1">
+                                <input asp-for="Deadline" type="date"
+                                       class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md">
+                            </div>
+                            <span asp-validation-for="Deadline" class="text-red-600 text-sm"></span>
+                        </div>
+
+                        <!-- Status -->
+                        <div>
+                            <div class="flex items-start">
+                                <div class="flex items-center h-5">
+                                    <input asp-for="IsActive" type="checkbox"
+                                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                                </div>
+                                <div class="ml-3 text-sm">
+                                    <label asp-for="IsActive" class="font-medium text-gray-700">Active Job Posting</label>
+                                    <p class="text-gray-500">Job will be visible to applicants</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Description -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Job Description</h3>
+
+                    <div>
+                        <label asp-for="Description" class="block text-sm font-medium text-gray-700">
+                            Description <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1">
+                            <textarea asp-for="Description" rows="8"
+                                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                      placeholder="Provide a detailed description of the job role, responsibilities, and what the candidate will be working on..."></textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                            <span id="description-count">0</span>/5000 characters. Provide a comprehensive description of the role.
+                        </p>
+                        <span asp-validation-for="Description" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Requirements -->
+            <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+                <div class="px-4 py-5 sm:p-6">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900 mb-6">Requirements & Qualifications</h3>
+
+                    <div>
+                        <label asp-for="Requirements" class="block text-sm font-medium text-gray-700">
+                            Requirements <span class="text-red-500">*</span>
+                        </label>
+                        <div class="mt-1">
+                            <textarea asp-for="Requirements" rows="6"
+                                      class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                      placeholder="List the required skills, experience, education, and qualifications for this position..."></textarea>
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500">
+                            <span id="requirements-count">0</span>/3000 characters. Include both required and preferred qualifications.
+                        </p>
+                        <span asp-validation-for="Requirements" class="text-red-600 text-sm"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-end space-x-3">
+                <a asp-action="Jobs" class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    Cancel
+                </a>
+                <button type="button" onclick="saveDraft()" class="bg-gray-600 border border-transparent rounded-md shadow-sm py-2 px-4 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    Save as Draft
+                </button>
+                <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg class="-ml-1 mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    Create Job
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Character counters
+            const descriptionTextarea = document.querySelector('textarea[name="Description"]');
+            const requirementsTextarea = document.querySelector('textarea[name="Requirements"]');
+            const descriptionCount = document.getElementById('description-count');
+            const requirementsCount = document.getElementById('requirements-count');
+
+            function updateCharacterCount(textarea, counter) {
+                counter.textContent = textarea.value.length;
+                const maxLength = textarea.getAttribute('maxlength') || (textarea.name === 'Description' ? 5000 : 3000);
+                if (textarea.value.length > maxLength * 0.9) {
+                    counter.className = 'text-orange-500';
+                } else {
+                    counter.className = '';
+                }
+            }
+
+            if (descriptionTextarea && descriptionCount) {
+                descriptionTextarea.addEventListener('input', function() {
+                    updateCharacterCount(this, descriptionCount);
+                });
+                updateCharacterCount(descriptionTextarea, descriptionCount);
+            }
+
+            if (requirementsTextarea && requirementsCount) {
+                requirementsTextarea.addEventListener('input', function() {
+                    updateCharacterCount(this, requirementsCount);
+                });
+                updateCharacterCount(requirementsTextarea, requirementsCount);
+            }
+
+            // Form submission handling
+            const form = document.getElementById('createJobForm');
+            form.addEventListener('submit', function(e) {
+                const submitButton = this.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+
+                submitButton.disabled = true;
+                submitButton.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                    Creating Job...
+                `;
+
+                // Re-enable button after 5 seconds as fallback
+                setTimeout(() => {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                }, 5000);
+            });
+
+            // Auto-save functionality
+            let autoSaveTimeout;
+            const autoSaveDelay = 30000; // 30 seconds
+
+            function triggerAutoSave() {
+                clearTimeout(autoSaveTimeout);
+                autoSaveTimeout = setTimeout(() => {
+                    autoSave();
+                }, autoSaveDelay);
+            }
+
+            // Add auto-save listeners to form inputs
+            form.querySelectorAll('input, textarea, select').forEach(input => {
+                input.addEventListener('input', triggerAutoSave);
+                input.addEventListener('change', triggerAutoSave);
+            });
+        });
+
+        // Save as draft functionality
+        function saveDraft() {
+            const form = document.getElementById('createJobForm');
+            const formData = new FormData(form);
+            formData.set('IsActive', 'false'); // Save as inactive
+
+            // You would implement this endpoint in your controller
+            fetch('/Admin/SaveJobDraft', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Draft saved successfully!', 'success');
+                } else {
+                    showToast('Error saving draft', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error saving draft', 'error');
+            });
+        }
+
+        // Auto-save functionality
+        function autoSave() {
+            const form = document.getElementById('createJobForm');
+            const title = form.querySelector('input[name="Title"]').value;
+
+            if (title.trim()) {
+                saveDraft();
+                showToast('Auto-saved', 'info');
+            }
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            // Create toast container if it doesn't exist
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'fixed top-4 right-4 z-50';
+                document.body.appendChild(toastContainer);
+            }
+
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `mb-2 px-4 py-2 rounded-md text-white shadow-lg ${colors[type]} transform transition-all duration-300 ease-in-out`;
+            toast.textContent = message;
+
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '×';
+            closeBtn.className = 'ml-2 text-white hover:text-gray-200';
+            closeBtn.onclick = () => removeToast(toastId);
+            toast.appendChild(closeBtn);
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => removeToast(toastId), 3000);
+        }
+
+        function removeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }
+        }
+    </script>
+}

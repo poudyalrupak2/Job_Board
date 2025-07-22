@@ -1,0 +1,372 @@
+﻿@model AICommunityPlatform.ViewModels.AdvancedSearchViewModel
+@{
+    ViewData["Title"] = "Advanced Search";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Advanced Search</h1>
+                    <p class="text-gray-600">Find exactly what you're looking for</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Search" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Simple Search
+                    </a>
+                    <a href="/Jobs" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        Browse Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <form asp-action="Advanced" method="post" class="space-y-6">
+                <!-- Basic Search -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Basic Search</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="Keywords" class="block text-sm font-medium text-gray-700 mb-1">Keywords</label>
+                            <input asp-for="Keywords" type="text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                   placeholder="Job title, skills, company...">
+                        </div>
+                        <div>
+                            <label asp-for="Location" class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                            <input asp-for="Location" type="text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                   placeholder="City, province, country...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Job Details -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Job Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                            <label asp-for="Company" class="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                            <input asp-for="Company" type="text"
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                   placeholder="Company name...">
+                        </div>
+                        <div>
+                            <label asp-for="JobType" class="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                            <select asp-for="JobType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">All Types</option>
+                                <option value="FullTime">Full Time</option>
+                                <option value="PartTime">Part Time</option>
+                                <option value="Contract">Contract</option>
+                                <option value="Internship">Internship</option>
+                                <option value="Volunteer">Volunteer</option>
+                                <option value="Project">Project</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label asp-for="IsRemote" class="block text-sm font-medium text-gray-700 mb-1">Remote Work</label>
+                            <select asp-for="IsRemote" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Any</option>
+                                <option value="true">Remote Only</option>
+                                <option value="false">On-site Only</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Salary Range -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Salary Range</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="MinSalary" class="block text-sm font-medium text-gray-700 mb-1">Minimum Salary</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2 text-gray-500">$</span>
+                                <input asp-for="MinSalary" type="number"
+                                       class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="50000">
+                            </div>
+                        </div>
+                        <div>
+                            <label asp-for="MaxSalary" class="block text-sm font-medium text-gray-700 mb-1">Maximum Salary</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-2 text-gray-500">$</span>
+                                <input asp-for="MaxSalary" type="number"
+                                       class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                                       placeholder="150000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Date and Sorting -->
+                <div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Filters & Sorting</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label asp-for="PostedSince" class="block text-sm font-medium text-gray-700 mb-1">Posted Since</label>
+                            <select asp-for="PostedSince" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Any time</option>
+                                <option value="1">Last 24 hours</option>
+                                <option value="7">Last week</option>
+                                <option value="30">Last month</option>
+                                <option value="90">Last 3 months</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label asp-for="SortBy" class="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                            <select asp-for="SortBy" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="newest">Newest First</option>
+                                <option value="oldest">Oldest First</option>
+                                <option value="salary_high">Highest Salary</option>
+                                <option value="salary_low">Lowest Salary</option>
+                                <option value="company">Company A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="flex justify-center">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-3 rounded-md text-lg font-medium">
+                        <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        Search Jobs
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search Results -->
+        @if (Model.Results.Any())
+        {
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">
+                        Search Results (@Model.TotalResults jobs found)
+                    </h2>
+                </div>
+
+                <div class="divide-y divide-gray-200">
+                    @foreach (var job in Model.Results)
+                    {
+                        <div class="p-6 hover:bg-gray-50 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-1">
+                                    <h3 class="text-lg font-medium text-gray-900 mb-1">
+                                        <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="hover:text-indigo-600">
+                                            @job.Title
+                                        </a>
+                                    </h3>
+                                    <p class="text-sm text-gray-600 mb-2">@job.Organization.DisplayName</p>
+
+                                    <div class="flex items-center text-sm text-gray-500 mb-3">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        @job.Location
+
+                                        <span class="mx-2">•</span>
+
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                                        </svg>
+                                        @job.Type.ToString()
+
+                                        @if (job.Salary.HasValue)
+                                        {
+                                            <span class="mx-2">•</span>
+                                            <span>$@job.Salary.Value.ToString("N0")</span>
+                                        }
+
+                                        @if (job.IsRemote)
+                                        {
+                                            <span class="mx-2">•</span>
+                                            <span class="text-green-600">Remote</span>
+                                        }
+                                    </div>
+
+                                    <p class="text-sm text-gray-700 mb-3">
+                                        @(job.Description.Length > 200 ? job.Description.Substring(0, 200) + "..." : job.Description)
+                                    </p>
+
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Posted @job.PostedDate.ToString("MMM dd, yyyy")
+
+                                        @if (job.Deadline.HasValue)
+                                        {
+                                            <span class="mx-2">•</span>
+                                            <span>Deadline: @job.Deadline.Value.ToString("MMM dd, yyyy")</span>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col space-y-2 ml-4">
+                                    <button onclick="saveJob(@job.Id)" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                        </svg>
+                                    </button>
+
+                                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id"
+                                       class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium text-center">
+                                        View Details
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        else if (Model.TotalResults == 0 && !string.IsNullOrEmpty(Model.Keywords))
+        {
+            <div class="bg-white rounded-lg shadow p-12 text-center">
+                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                <h3 class="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                <p class="text-gray-600 mb-4">Try adjusting your search criteria or browse all available jobs.</p>
+                <a href="/Jobs" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                    Browse All Jobs
+                </a>
+            </div>
+        }
+
+        <!-- Search Tips -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+            <h3 class="text-lg font-semibold text-blue-900 mb-3">Search Tips</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <h4 class="font-medium text-blue-800 mb-2">Keyword Search</h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li>• Use specific job titles like "Machine Learning Engineer"</li>
+                        <li>• Include relevant skills like "Python", "TensorFlow"</li>
+                        <li>• Try company names or industry terms</li>
+                        <li>• Use quotation marks for exact phrases</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-medium text-blue-800 mb-2">Advanced Filters</h4>
+                    <ul class="text-sm text-blue-700 space-y-1">
+                        <li>• Combine multiple filters for better results</li>
+                        <li>• Use salary ranges to find jobs in your budget</li>
+                        <li>• Filter by posting date for fresh opportunities</li>
+                        <li>• Sort results by relevance or salary</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function saveJob(jobId) {
+            fetch('/Jobs/SaveJob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ jobId: jobId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Job saved successfully!', 'success');
+                    event.target.innerHTML = `
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                    `;
+                    event.target.className = 'text-indigo-600 hover:text-indigo-800 transition-colors';
+                } else {
+                    showToast('Error saving job', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error saving job', 'error');
+            });
+        }
+
+        function showToast(message, type) {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${colors[type]}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Auto-suggestions for search fields
+        document.addEventListener('DOMContentLoaded', function() {
+            const keywordsInput = document.querySelector('input[name="Keywords"]');
+            const companyInput = document.querySelector('input[name="Company"]');
+
+            // Add autocomplete functionality
+            if (keywordsInput) {
+                keywordsInput.addEventListener('input', function() {
+                    // Implement autocomplete for keywords
+                    debounce(function() {
+                        if (keywordsInput.value.length > 2) {
+                            fetchSuggestions(keywordsInput.value, 'jobs');
+                        }
+                    }, 300);
+                });
+            }
+
+            if (companyInput) {
+                companyInput.addEventListener('input', function() {
+                    debounce(function() {
+                        if (companyInput.value.length > 2) {
+                            fetchSuggestions(companyInput.value, 'companies');
+                        }
+                    }, 300);
+                });
+            }
+        });
+
+        function fetchSuggestions(term, type) {
+            fetch(`/Search/Autocomplete?term=${encodeURIComponent(term)}&type=${type}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Handle suggestions here
+                    console.log('Suggestions:', data);
+                })
+                .catch(error => {
+                    console.error('Error fetching suggestions:', error);
+                });
+        }
+
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => func.apply(this, args), delay);
+            };
+        }
+    </script>
+}

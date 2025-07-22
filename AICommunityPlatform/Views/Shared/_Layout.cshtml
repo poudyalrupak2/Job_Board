@@ -1,0 +1,367 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - AI Community Platform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/AICommunityPlatform.styles.css" asp-append-version="true" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ai-blue': '#2563eb',
+                        'ai-indigo': '#4f46e5',
+                        'ai-purple': '#7c3aed',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <header>
+        <nav class="bg-white shadow-sm border-b border-gray-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <a asp-area="" asp-controller="Home" asp-action="Index" class="flex items-center">
+                            <div class="flex-shrink-0 flex items-center">
+                                <div class="w-8 h-8 bg-gradient-to-r from-ai-blue to-ai-indigo rounded-lg flex items-center justify-center">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <span class="ml-2 text-xl font-bold text-gray-900">AI Community</span>
+                            </div>
+                        </a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="hidden md:ml-6 md:flex md:space-x-8">
+                                <!-- Admin Navigation -->
+                                @if (User.IsInRole("SystemAdmin"))
+                                {
+                                    <a asp-controller="Admin" asp-action="Index" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                        </svg>
+                                        Admin Dashboard
+                                    </a>
+                                    <a asp-controller="Admin" asp-action="Jobs" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                        Jobs
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-controller="Home" asp-action="Dashboard" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                        Dashboard
+                                    </a>
+                                    <a asp-controller="Jobs" asp-action="Index" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                        Jobs
+                                    </a>
+                                }
+
+                                <!-- Common Navigation for All Users -->
+                              
+                                <a asp-controller="Community" asp-action="Index" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                    Community
+                                </a>
+                                <a asp-controller="Community" asp-action="Members" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                    Members
+                                </a>
+                                <a asp-controller="Community" asp-action="Groups" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                    Groups
+                                </a>
+                                <a asp-controller="Messaging" asp-action="Index" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                    Messages
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+                    <!-- Search Bar -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
+                            <div class="max-w-lg w-full lg:max-w-xs">
+                                <label for="search" class="sr-only">Search</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                        </svg>
+                                    </div>
+                                    <input id="search" name="search"
+                                           class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-ai-blue focus:border-ai-blue text-sm"
+                                           placeholder="Search jobs, members, groups..."
+                                           type="search">
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <!-- User Menu -->
+                    <div class="flex items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <!-- Notifications -->
+                            <button class="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ai-blue mr-3">
+                                <span class="sr-only">View notifications</span>
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5-5H9l-5 5h5m0 0v1a3 3 0 11-6 0v-1m6 0V9a9 9 0 10-18 0v8m18 0V9a9 9 0 00-18 0v8"></path>
+                                </svg>
+                            </button>
+
+                            <!-- Messages (Hide for Admin to reduce clutter) -->
+                            @if (!User.IsInRole("SystemAdmin"))
+                            {
+                                <a href="@Url.Action("Index", "Messaging")" class="bg-white p-1 rounded-full text-gray-400 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ai-blue mr-3 relative">
+                                    <span class="sr-only">View messages</span>
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                    <span id="messageCount" class="nav-unread-count hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                                </a>
+                            }
+
+                            <!-- Profile dropdown -->
+                            <div class="relative">
+                                <button id="user-menu-button" class="bg-white flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ai-blue">
+                                    <span class="sr-only">Open user menu</span>
+                                    <div class="h-8 w-8 rounded-full bg-ai-blue flex items-center justify-center">
+                                        <span class="text-white text-sm font-medium">
+                                            @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                                        </span>
+                                    </div>
+                                </button>
+
+                                <div id="user-menu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                    <div class="py-1">
+                                        <!-- Admin-specific menu items -->
+                                        @if (User.IsInRole("SystemAdmin"))
+                                        {
+                                            <a asp-controller="Admin" asp-action="Index" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                                <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                                </svg>
+                                                Admin Dashboard
+                                            </a>
+                                            <a asp-controller="Admin" asp-action="Users" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Users</a>
+                                            <a asp-controller="Admin" asp-action="Jobs" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Jobs</a>
+                                            <a asp-controller="Admin" asp-action="Applications" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Applications</a>
+                                            <a asp-controller="Admin" asp-action="Groups" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Manage Groups</a>
+                                            <a asp-controller="Admin" asp-action="Reports" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Reports</a>
+                                            <a asp-controller="Admin" asp-action="Settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">System Settings</a>
+                                            <div class="border-t border-gray-100"></div>
+                                        }
+
+                                        <!-- Organization-specific menu items -->
+                                        @* Assuming you have a way to check if user is an organization *@
+                                        @if (User.Claims.Any(c => c.Type == "Role" && c.Value == "Organization"))
+                                        {
+                                            <a asp-controller="Jobs" asp-action="Create" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Post New Job</a>
+                                            <a asp-controller="Jobs" asp-action="MyJobs" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Job Postings</a>
+                                            <div class="border-t border-gray-100"></div>
+                                        }
+
+                                        <!-- Common user menu items -->
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your Profile</a>
+                                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+
+                                        <!-- Community Member specific items -->
+                                        @if (!User.IsInRole("SystemAdmin"))
+                                        {
+                                            <a asp-controller="Jobs" asp-action="MyApplications" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Applications</a>
+                                            <a asp-controller="Jobs" asp-action="SavedJobs" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Saved Jobs</a>
+                                            <a asp-controller="Community" asp-action="Connections" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Connections</a>
+                                            <a asp-controller="Messaging" asp-action="Index" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Messages</a>
+                                        }
+
+                                        <a href="/Document" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Documents</a>
+                                        <div class="border-t border-gray-100"></div>
+                                        <a asp-controller="Account" asp-action="Logout" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="flex items-center space-x-4">
+                                <a asp-controller="Account" asp-action="Login" class="text-gray-900 hover:text-ai-blue px-3 py-2 rounded-md text-sm font-medium">
+                                    Sign in
+                                </a>
+                                <a asp-controller="Account" asp-action="Register" class="bg-ai-blue hover:bg-ai-indigo text-white px-4 py-2 rounded-md text-sm font-medium">
+                                    Join Now
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        @RenderBody()
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="py-12">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="col-span-1 md:col-span-1">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-gradient-to-r from-ai-blue to-ai-indigo rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                </svg>
+                            </div>
+                            <span class="ml-2 text-xl font-bold text-gray-900">AI Community</span>
+                        </div>
+                        <p class="mt-4 text-gray-600 text-sm">
+                            Connecting AI professionals worldwide. Find jobs, network, and grow your career in artificial intelligence.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Platform</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a asp-controller="Jobs" asp-action="Index" class="text-sm text-gray-600 hover:text-ai-blue">Browse Jobs</a></li>
+                            <li><a asp-controller="Community" asp-action="Members" class="text-sm text-gray-600 hover:text-ai-blue">Find Members</a></li>
+                            <li><a asp-controller="Community" asp-action="Groups" class="text-sm text-gray-600 hover:text-ai-blue">Join Groups</a></li>
+                            @if (!User.IsInRole("SystemAdmin"))
+                            {
+                                <li><a asp-controller="Jobs" asp-action="Create" class="text-sm text-gray-600 hover:text-ai-blue">Post Jobs</a></li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Resources</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">AI Career Guide</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Salary Insights</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Interview Tips</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Learning Paths</a></li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-semibold text-gray-900 tracking-wider uppercase">Support</h3>
+                        <ul class="mt-4 space-y-3">
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Help Center</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Contact Us</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Privacy Policy</a></li>
+                            <li><a href="#" class="text-sm text-gray-600 hover:text-ai-blue">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-gray-200">
+                    <p class="text-center text-sm text-gray-600">
+                        &copy; 2025 AI Community Platform. All rights reserved.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        // Global JavaScript for layout functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // User menu toggle
+            const userMenuButton = document.getElementById('user-menu-button');
+            const userMenu = document.getElementById('user-menu');
+
+            if (userMenuButton && userMenu) {
+                userMenuButton.addEventListener('click', function() {
+                    userMenu.classList.toggle('hidden');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
+                        userMenu.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Search functionality
+            const searchInput = document.getElementById('search');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        const searchTerm = this.value.trim();
+                        if (searchTerm) {
+                            // Redirect to appropriate search page based on current page
+                            const currentPath = window.location.pathname;
+                            if (currentPath.includes('/Jobs')) {
+                                window.location.href = `/Jobs?searchTerm=${encodeURIComponent(searchTerm)}`;
+                            } else if (currentPath.includes('/Community')) {
+                                window.location.href = `/Community/Members?searchTerm=${encodeURIComponent(searchTerm)}`;
+                            } else {
+                                window.location.href = `/Jobs?searchTerm=${encodeURIComponent(searchTerm)}`;
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Load message count (only for non-admin users)
+        @if (!User.IsInRole("SystemAdmin"))
+        {
+            <text>loadMessageCount();</text>
+        }
+
+            // Add active class to current navigation item
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('nav a');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (currentPath === href || (currentPath.startsWith(href) && href !== '/'))) {
+                    link.classList.add('text-ai-blue', 'border-ai-blue');
+                    link.classList.remove('text-gray-900');
+                }
+            });
+        });
+
+        // Function to load unread message count (only for non-admin users)
+        @if (!User.IsInRole("SystemAdmin"))
+        {
+            <text>
+                function loadMessageCount() {
+                    if (!document.getElementById('messageCount')) return;
+
+                    fetch('/Messaging/GetUnreadCount')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success && data.count > 0) {
+                                const messageCountEl = document.getElementById('messageCount');
+                                if (messageCountEl) {
+                                    messageCountEl.textContent = data.count > 99 ? '99+' : data.count;
+                                    messageCountEl.classList.remove('hidden');
+                                }
+                                // Update page title with unread count
+                                document.title = `(${data.count}) ${document.title.replace(/^\(\d+\)\s*/, '')}`;
+                            }
+                        })
+                        .catch(error => console.error('Error loading message count:', error));
+                }
+
+                // Refresh message count every 30 seconds
+                setInterval(loadMessageCount, 30000);
+            </text>
+        }
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

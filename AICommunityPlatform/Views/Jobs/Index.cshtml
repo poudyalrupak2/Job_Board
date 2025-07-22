@@ -1,0 +1,216 @@
+﻿@model IEnumerable<AICommunityPlatform.Models.Job>
+@{
+    ViewData["Title"] = "Jobs";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">AI Jobs</h1>
+                    <p class="text-gray-600">Find your next opportunity in AI</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Jobs/SavedJobs" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium" aria-label="Saved Jobs">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                        </svg>
+                        Saved Jobs
+                    </a>
+                    <a href="/Jobs/MyApplications" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium" aria-label="My Applications">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        My Applications
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm" placeholder="Job title, keywords..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+                    <select name="jobType" class="...">
+                        <option value="">All Types</option>
+                        <option value="FullTime" selected="@(ViewBag.JobType?.ToString() == "FullTime" ? "selected" : null)">Full Time</option>
+                        <option value="PartTime" selected="@(ViewBag.JobType?.ToString() == "PartTime" ? "selected" : null)">Part Time</option>
+                        <option value="Contract" selected="@(ViewBag.JobType?.ToString() == "Contract" ? "selected" : null)">Contract</option>
+                        <option value="Internship" selected="@(ViewBag.JobType?.ToString() == "Internship" ? "selected" : null)">Internship</option>
+                        <option value="Volunteer" selected="@(ViewBag.JobType?.ToString() == "Volunteer" ? "selected" : null)">Volunteer</option>
+                        <option value="Project" selected="@(ViewBag.JobType?.ToString() == "Project" ? "selected" : null)">Project</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                    <input type="text" name="location" value="@ViewBag.Location" placeholder="City, province..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex items-end justify-between">
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-medium">
+                        Search Jobs
+                    </button>
+                    <a href="/Jobs" class="text-sm text-gray-500 hover:underline ml-2">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Job Results -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Job Listings -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">@Model.Count() Jobs Found</h2>
+                    </div>
+
+                    <div class="divide-y divide-gray-200">
+                        @if (!Model.Any())
+                        {
+                            <div class="p-6 text-center text-gray-600">
+                                <h3 class="text-lg font-medium text-gray-900 mb-2">No jobs found</h3>
+                                <p>Try adjusting your search criteria or check back later for new opportunities.</p>
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var job in Model)
+                            {
+                                <div class="p-6 hover:bg-gray-50 transition-colors">
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex-1">
+                                            <h3 class="text-lg font-medium text-gray-900 mb-1">
+                                                <a asp-action="Details" asp-route-id="@job.Id" class="hover:text-indigo-600">
+                                                    @job.Title
+                                                </a>
+                                            </h3>
+                                            <p class="text-sm text-gray-600 mb-2">@job.Organization.DisplayName</p>
+                                            <div class="flex items-center text-sm text-gray-500 mb-3">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                </svg>
+                                                @job.Location
+                                                <span class="mx-2">•</span>
+                                                <span>@job.Type</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button onclick="saveJob(@job.Id)" class="text-sm text-indigo-600 hover:text-indigo-800" title="Save Job">
+                                                <svg class="w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                          d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Job Market Insights</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Total Jobs</span>
+                            <span class="text-sm font-medium text-gray-900">@Model.Count()</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Remote Jobs</span>
+                            <span class="text-sm font-medium text-gray-900">@Model.Count(j => j.IsRemote)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Full-time</span>
+                            <span class="text-sm font-medium text-gray-900">@Model.Count(j => j.Type == AICommunityPlatform.Models.JobType.FullTime)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Internships</span>
+                            <span class="text-sm font-medium text-gray-900">@Model.Count(j => j.Type == AICommunityPlatform.Models.JobType.Internship)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Popular Skills -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Popular Skills</h3>
+                    <div class="flex flex-wrap gap-2">
+                        @foreach (var skill in new[] { "Machine Learning", "Python", "TensorFlow", "Deep Learning", "NLP", "PyTorch", "Computer Vision", "Data Science" })
+                        {
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">@skill</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- Job Alerts -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Job Alerts</h3>
+                    <p class="text-sm text-gray-600 mb-4">Get notified when new jobs match your criteria</p>
+                    <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        Create Alert
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function saveJob(jobId) {
+            fetch('/Jobs/SaveJob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                },
+                body: JSON.stringify({ jobId: jobId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Job saved successfully!', 'success');
+                } else {
+                    showToast('Error saving job', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error saving job', 'error');
+            });
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchForm = document.querySelector('form');
+            const searchButton = document.querySelector('button[type="submit"]');
+            searchForm.addEventListener('submit', function () {
+                searchButton.textContent = 'Searching...';
+                searchButton.disabled = true;
+            });
+        });
+    </script>
+}

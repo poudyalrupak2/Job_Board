@@ -1,0 +1,430 @@
+﻿@model IEnumerable<AICommunityPlatform.Models.User>
+@{
+    ViewData["Title"] = "Community Members";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Community Members</h1>
+                    <p class="text-gray-600">Connect with @Model.Count() AI professionals</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Community" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Back to Feed
+                    </a>
+                    <a href="/Community/Groups" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Browse Groups
+                    </a>
+                    <a href="/Messaging" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                        </svg>
+                        Messages
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search and Filters -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+            <form method="get" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Search Members</label>
+                    <input type="text" name="searchTerm" value="@ViewBag.SearchTerm"
+                           placeholder="Name, skills, experience..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
+                    <select name="role" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">All Roles</option>
+                        <option value="CommunityMember">Community Member</option>
+                        <option value="Organization">Organization</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Skills</label>
+                    <input type="text" name="skills"
+                           placeholder="Python, ML, AI..."
+                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md font-medium">
+                        Search Members
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Members Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @foreach (var member in Model)
+            {
+                <div class="bg-white rounded-lg shadow hover:shadow-md transition-shadow overflow-hidden">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-white font-semibold">
+                                        @member.FirstName.Substring(0, 1)@member.LastName.Substring(0, 1)
+                                    </span>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">@member.DisplayName</h3>
+                                    <p class="text-sm text-gray-500">@member.Role</p>
+                                </div>
+                            </div>
+
+                            <!-- Connection Status Button -->
+                            <div id="connectionStatus_@member.Id">
+                                <button onclick="handleConnectionAction(@member.Id, this)"
+                                        class="text-indigo-600 hover:text-indigo-800"
+                                        data-user-id="@member.Id"
+                                        data-action="connect">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(member.Bio))
+                        {
+                            <p class="text-sm text-gray-700 mb-3">
+                                @(member.Bio.Length > 100 ? member.Bio.Substring(0, 100) + "..." : member.Bio)
+                            </p>
+                        }
+
+                        @if (!string.IsNullOrEmpty(member.Skills))
+                        {
+                            <div class="mb-4">
+                                <h4 class="text-sm font-medium text-gray-900 mb-2">Skills</h4>
+                                <div class="flex flex-wrap gap-1">
+                                    @foreach (var skill in member.Skills.Split(',').Take(4))
+                                    {
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">
+                                            @skill.Trim()
+                                        </span>
+                                    }
+                                    @if (member.Skills.Split(',').Length > 4)
+                                    {
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                                            +@(member.Skills.Split(',').Length - 4) more
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        }
+
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-200">
+                            <div class="flex items-center text-sm text-gray-500">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Joined @member.CreatedAt.ToString("MMM yyyy")
+                            </div>
+                            <div class="flex space-x-2">
+                                <button onclick="sendMessage(@member.Id)" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                    </svg>
+                                </button>
+                                <button onclick="viewProfile(@member.Id)" class="text-gray-400 hover:text-indigo-600 transition-colors">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (!Model.Any())
+            {
+                <div class="col-span-full bg-white rounded-lg shadow p-12 text-center">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No members found</h3>
+                    <p class="text-gray-600">Try adjusting your search criteria or check back later.</p>
+                </div>
+            }
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-8 flex justify-center">
+            <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Previous
+                </a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    1
+                </a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-indigo-50 text-sm font-medium text-indigo-600">
+                    2
+                </a>
+                <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                    3
+                </a>
+                <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                    Next
+                </a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden form for anti-forgery token -->
+<form style="display: none;">
+    @Html.AntiForgeryToken()
+</form>
+
+@section Scripts {
+    <script>
+        // Initialize connection statuses on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadConnectionStatuses();
+        });
+
+        // Get anti-forgery token
+        function getAntiForgeryToken() {
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            return tokenInput ? tokenInput.value : '';
+        }
+
+        // Load connection statuses for all members
+        function loadConnectionStatuses() {
+            const memberIds = [];
+            document.querySelectorAll('[data-user-id]').forEach(element => {
+                const userId = element.getAttribute('data-user-id');
+                if (userId && !memberIds.includes(userId)) {
+                    memberIds.push(userId);
+                }
+            });
+
+            if (memberIds.length > 0) {
+                fetch('/Community/GetConnectionStatuses', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': getAntiForgeryToken()
+                    },
+                    body: JSON.stringify({ userIds: memberIds })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Object.keys(data.statuses).forEach(userId => {
+                            updateConnectionButton(userId, data.statuses[userId]);
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading connection statuses:', error));
+            }
+        }
+
+        // Update connection button based on status
+        function updateConnectionButton(userId, status) {
+            const button = document.querySelector(`button[data-user-id="${userId}"]`);
+            if (!button) return;
+
+            switch(status) {
+                case 'Connected':
+                    button.innerHTML = `
+                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    `;
+                    button.className = 'text-green-600 cursor-not-allowed';
+                    button.disabled = true;
+                    button.setAttribute('data-action', 'connected');
+                    break;
+                case 'Pending':
+                    button.innerHTML = `
+                        <svg class="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    `;
+                    button.className = 'text-yellow-600 cursor-not-allowed';
+                    button.disabled = true;
+                    button.setAttribute('data-action', 'pending');
+                    break;
+                case 'PendingApproval':
+                    button.innerHTML = `
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    `;
+                    button.className = 'text-blue-600 hover:text-blue-800';
+                    button.disabled = false;
+                    button.setAttribute('data-action', 'approve');
+                    break;
+                default:
+                    button.innerHTML = `
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                    `;
+                    button.className = 'text-indigo-600 hover:text-indigo-800';
+                    button.disabled = false;
+                    button.setAttribute('data-action', 'connect');
+                    break;
+            }
+        }
+
+        // Handle connection actions
+        function handleConnectionAction(userId, button) {
+            const action = button.getAttribute('data-action');
+
+            if (action === 'connected' || action === 'pending') {
+                return; // Already connected or pending
+            }
+
+            const originalContent = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = `
+                <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+            `;
+
+            const endpoint = action === 'approve' ? '/Community/AcceptConnectionRequest' : '/Community/SendConnectionRequest';
+
+            fetch(endpoint, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: `userId=${userId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const message = action === 'approve' ? 'Connection request accepted!' : 'Connection request sent!';
+                    showToast(message, 'success');
+
+                    // Update button to show connected state
+                    updateConnectionButton(userId, 'Connected');
+                } else {
+                    showToast(data.message || 'Error processing request', 'error');
+                    button.disabled = false;
+                    button.innerHTML = originalContent;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Error processing request', 'error');
+                button.disabled = false;
+                button.innerHTML = originalContent;
+            });
+        }
+
+        // Send message function - now redirects to messaging
+            function sendMessage(userId) {
+            console.log(`Attempting to send message to user ${userId}`);
+
+            // Validate userId first
+            if (!userId || userId === 0 || userId === '0') {
+                console.error('Invalid userId:', userId);
+                showToast('Invalid user ID', 'error');
+                return;
+            }
+
+            // Check if users are connected first
+            fetch('/Community/CheckConnectionStatus', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: `userId=${userId}`
+            })
+            .then(response => {
+                console.log('CheckConnectionStatus response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('CheckConnectionStatus response:', data);
+                if (data.success && data.status === 'Connected') {
+                    // Redirect to conversation - make sure userId is valid
+                    console.log(`Redirecting to: /Messaging/Conversation/${userId}`);
+                    window.location.href = `/Messaging/Conversation?userid=${userId}`;
+                } else {
+                    showToast('You need to be connected to send messages', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error checking connection status:', error);
+                showToast('Error checking connection status', 'error');
+            });
+        }
+        function viewProfile(userId) {
+            window.location.href = `/Profile/View/${userId}`;
+        }
+
+        function showToast(message, type) {
+            let toastContainer = document.getElementById('toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.id = 'toast-container';
+                toastContainer.className = 'fixed top-4 right-4 z-50';
+                document.body.appendChild(toastContainer);
+            }
+
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toastId = 'toast-' + Date.now();
+            const toast = document.createElement('div');
+            toast.id = toastId;
+            toast.className = `mb-2 px-4 py-2 rounded-md text-white shadow-lg ${colors[type]} transform transition-all duration-300 ease-in-out`;
+            toast.textContent = message;
+
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '×';
+            closeBtn.className = 'ml-2 text-white hover:text-gray-200';
+            closeBtn.onclick = () => removeToast(toastId);
+            toast.appendChild(closeBtn);
+
+            toastContainer.appendChild(toast);
+
+            setTimeout(() => {
+                removeToast(toastId);
+            }, 5000);
+        }
+
+        function removeToast(toastId) {
+            const toast = document.getElementById(toastId);
+            if (toast) {
+                toast.style.transform = 'translateX(100%)';
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 300);
+            }
+        }
+    </script>
+}

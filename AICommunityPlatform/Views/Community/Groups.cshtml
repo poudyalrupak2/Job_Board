@@ -1,0 +1,386 @@
+﻿@model List<AICommunityPlatform.Models.Group>
+@{
+    ViewData["Title"] = "Groups";
+    Layout = "_Layout";
+}
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h3 mb-0">Community Groups</h2>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+                    <i class="fas fa-plus me-2"></i>Create Group
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var group in Model)
+            {
+                var membershipStatus = ViewBag.UserMembershipStatus != null ?
+                ((Dictionary<int, string>)ViewBag.UserMembershipStatus).GetValueOrDefault(group.Id, "not_member") :
+                "not_member";
+
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title mb-0">@group.Name</h5>
+                                @if (group.IsPrivate)
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-lock me-1"></i>Private
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-globe me-1"></i>Public
+                                    </span>
+                                }
+                            </div>
+
+                            <p class="card-text text-muted mb-3">@group.Description</p>
+
+                            <div class="mb-3">
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i>
+                                    Moderator: @group.Moderator.DisplayName
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="fas fa-users me-1"></i>
+                                    @group.Members.Count(m => m.IsApproved) members
+                                </small>
+                                <br>
+                                <small class="text-muted">
+                                    <i class="fas fa-calendar me-1"></i>
+                                    Created @group.CreatedAt.ToString("MMM dd, yyyy")
+                                </small>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a asp-action="Group" asp-route-id="@group.Id" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-eye me-1"></i>View
+                                </a>
+
+                                @switch (membershipStatus)
+                                {
+                                    case "member":
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm"
+                                                data-group-id="@group.Id"
+                                                data-action="leave"
+                                                onclick="leaveGroup(@group.Id, this)">
+                                            <i class="fas fa-sign-out-alt me-1"></i>Leave
+                                        </button>
+                                        break;
+                                    case "pending":
+                                        <button type="button" class="btn btn-warning btn-sm" disabled>
+                                            <i class="fas fa-clock me-1"></i>Pending
+                                        </button>
+                                        break;
+                                    default:
+                                        <button type="button"
+                                                class="btn btn-primary btn-sm"
+                                                data-group-id="@group.Id"
+                                                data-action="join"
+                                                onclick="joinGroup(@group.Id, this)">
+                                            <i class="fas fa-plus me-1"></i>Join
+                                        </button>
+                                        break;
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <h4>No Groups Yet</h4>
+                    <p class="text-muted">Be the first to create a group in the AI community!</p>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createGroupModal">
+                        <i class="fas fa-plus me-2"></i>Create First Group
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Create Group Modal -->
+<div class="modal fade" id="createGroupModal" tabindex="-1" aria-labelledby="createGroupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createGroupModalLabel">Create New Group</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="createGroupForm">
+                @Html.AntiForgeryToken()
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="groupName" class="form-label">Group Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="groupName" name="name" required maxlength="100">
+                        <div class="form-text">Choose a descriptive name for your group</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="groupDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="groupDescription" name="description" rows="3" maxlength="500"></textarea>
+                        <div class="form-text">Describe what your group is about and its purpose</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="isPrivate" name="isPrivate">
+                            <label class="form-check-label" for="isPrivate">
+                                Private Group
+                            </label>
+                        </div>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Private groups require approval to join. Public groups allow anyone to join immediately.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Create Group
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div id="toast-container" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;"></div>
+
+@section Scripts {
+    <script>
+        // Get anti-forgery token value
+        function getAntiForgeryToken() {
+            const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+            return tokenInput ? tokenInput.value : '';
+        }
+
+        // Group Management JavaScript
+        function joinGroup(groupId, button) {
+            console.log('joinGroup called with groupId:', groupId, 'type:', typeof groupId);
+
+            // Validate groupId
+            if (!groupId || groupId <= 0) {
+                showToast('Invalid group ID', 'error');
+                return;
+            }
+
+            // Disable button and show loading state
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Joining...';
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('groupId', groupId);
+            formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+            console.log('Sending request with groupId:', groupId);
+
+            // Send AJAX request
+            fetch('/Community/JoinGroup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Response data:', data);
+                if (data.success) {
+                    showToast(data.message, 'success');
+
+                    // Update button based on response
+                    if (data.requiresApproval) {
+                        button.innerHTML = '<i class="fas fa-clock me-1"></i>Pending';
+                        button.className = 'btn btn-warning btn-sm';
+                        button.disabled = true;
+                    } else {
+                        button.innerHTML = '<i class="fas fa-sign-out-alt me-1"></i>Leave';
+                        button.className = 'btn btn-outline-danger btn-sm';
+                        button.disabled = false;
+                        button.onclick = () => leaveGroup(groupId, button);
+                    }
+                } else {
+                    showToast(data.message || 'Failed to join group', 'error');
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while joining the group', 'error');
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        function leaveGroup(groupId, button) {
+            if (!confirm('Are you sure you want to leave this group?')) {
+                return;
+            }
+
+            console.log('leaveGroup called with groupId:', groupId);
+
+            // Validate groupId
+            if (!groupId || groupId <= 0) {
+                showToast('Invalid group ID', 'error');
+                return;
+            }
+
+            // Disable button and show loading state
+            const originalText = button.innerHTML;
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Leaving...';
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('groupId', groupId);
+            formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+            // Send AJAX request
+            fetch('/Community/LeaveGroup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+
+                    // Update button back to join state
+                    button.innerHTML = '<i class="fas fa-plus me-1"></i>Join';
+                    button.className = 'btn btn-primary btn-sm';
+                    button.onclick = () => joinGroup(groupId, button);
+                    button.disabled = false;
+                } else {
+                    showToast(data.message || 'Failed to leave group', 'error');
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while leaving the group', 'error');
+                button.disabled = false;
+                button.innerHTML = originalText;
+            });
+        }
+
+        function createGroup() {
+            const name = document.getElementById('groupName').value.trim();
+            const description = document.getElementById('groupDescription').value.trim();
+            const isPrivate = document.getElementById('isPrivate').checked;
+
+            if (!name) {
+                showToast('Group name is required', 'error');
+                return;
+            }
+
+            const submitBtn = document.querySelector('#createGroupForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Creating...';
+
+            // Create form data
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('isPrivate', isPrivate);
+            formData.append('__RequestVerificationToken', getAntiForgeryToken());
+
+            fetch('/Community/CreateGroup', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('createGroupModal'));
+                    if (modal) modal.hide();
+
+                    // Reset form
+                    document.getElementById('createGroupForm').reset();
+
+                    // Reload the page to show new group
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message || 'Failed to create group', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while creating the group', 'error');
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            });
+        }
+
+        // Toast notification function
+        function showToast(message, type = 'info') {
+            const toastContainer = document.getElementById('toast-container');
+            const toastId = 'toast-' + Date.now();
+
+            const bgClass = type === 'error' ? 'bg-danger' : type === 'success' ? 'bg-success' : 'bg-info';
+
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center text-white ${bgClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                </div>
+            `;
+
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, { delay: 4000 });
+            toast.show();
+
+            toastElement.addEventListener('hidden.bs.toast', () => {
+                toastElement.remove();
+            });
+        }
+
+        // Initialize form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            const createGroupForm = document.getElementById('createGroupForm');
+            if (createGroupForm) {
+                createGroupForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    createGroup();
+                });
+            }
+        });
+    </script>
+}

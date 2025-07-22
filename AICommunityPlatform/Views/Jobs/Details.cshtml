@@ -1,0 +1,395 @@
+﻿@model AICommunityPlatform.Models.Job
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center py-4">
+                <a href="/Jobs" class="text-indigo-600 hover:text-indigo-800 mr-4">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </a>
+                <h1 class="text-2xl font-bold text-gray-900">@Model.Title</h1>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Job Details -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <!-- Job Header -->
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <h1 class="text-2xl font-bold text-gray-900 mb-2">@Model.Title</h1>
+                                <p class="text-lg text-gray-600 mb-3">@Model.Organization.DisplayName</p>
+
+                                <div class="flex flex-wrap items-center text-sm text-gray-500 gap-4">
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                        @Model.Location
+                                    </div>
+
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                                        </svg>
+                                        @Model.Type.ToString()
+                                    </div>
+
+                                    @if (Model.Salary.HasValue)
+                                    {
+                                        <div class="flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                                            </svg>
+                                            $@Model.Salary.Value.ToString("N0")
+                                        </div>
+                                    }
+
+                                    @if (Model.IsRemote)
+                                    {
+                                        <div class="flex items-center text-green-600">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                            </svg>
+                                            Remote Work Available
+                                        </div>
+                                    }
+
+                                    <div class="flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        Posted @Model.PostedDate.ToString("MMM dd, yyyy")
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex space-x-2">
+                                <button onclick="saveJob(@Model.Id)" class="text-gray-400 hover:text-indigo-600 p-2 rounded-md transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+                                    </svg>
+                                </button>
+
+                                <button onclick="shareJob()" class="text-gray-400 hover:text-indigo-600 p-2 rounded-md transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Job Description -->
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <h2 class="text-xl font-semibold text-gray-900 mb-3">Job Description</h2>
+                                <div class="prose max-w-none text-gray-700">
+                                    @Html.Raw(Model.Description.Replace("\n", "<br/>"))
+                                </div>
+                            </div>
+
+                            @if (!string.IsNullOrEmpty(Model.Requirements))
+                            {
+                                <div>
+                                    <h2 class="text-xl font-semibold text-gray-900 mb-3">Requirements</h2>
+                                    <div class="prose max-w-none text-gray-700">
+                                        @Html.Raw(Model.Requirements.Replace("\n", "<br/>"))
+                                    </div>
+                                </div>
+                            }
+
+                            @if (Model.Deadline.HasValue)
+                            {
+                                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                    <div class="flex">
+                                        <div class="flex-shrink-0">
+                                            <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <div class="ml-3">
+                                            <h3 class="text-sm font-medium text-yellow-800">Application Deadline</h3>
+                                            <p class="text-sm text-yellow-700 mt-1">
+                                                Applications must be submitted by @Model.Deadline.Value.ToString("MMMM dd, yyyy")
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Application Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow p-6 sticky top-8">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Apply for this Job</h2>
+
+                    <div class="space-y-4">
+                        <div class="bg-blue-50 rounded-lg p-4">
+                            <h3 class="text-sm font-medium text-blue-900 mb-2">Easy Apply</h3>
+                            <p class="text-sm text-blue-800">Apply directly through our platform with your profile and resume.</p>
+                        </div>
+
+                        <form id="applicationForm" class="space-y-4" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Resume/CV <span class="text-red-500">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="file" name="resume" id="resume" accept=".pdf,.doc,.docx" required
+                                           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100">
+                                    <p class="text-xs text-gray-500 mt-1">PDF, DOC, or DOCX files only (max 5MB)</p>
+                                </div>
+                                <div id="fileError" class="text-red-500 text-xs mt-1 hidden"></div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">
+                                    Cover Letter <span class="text-red-500">*</span>
+                                </label>
+                                <textarea name="coverLetter" id="coverLetter" rows="5" required
+                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                          placeholder="Why are you interested in this position? What makes you a good fit?"></textarea>
+                                <p class="text-xs text-gray-500 mt-1">Minimum 50 characters</p>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <p class="text-sm text-gray-600 mb-2">Your application will include:</p>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Your uploaded resume/CV</li>
+                                    <li>• Your cover letter</li>
+                                    <li>• Your profile information</li>
+                                    <li>• Contact information</li>
+                                </ul>
+                            </div>
+
+                            <button type="submit" id="submitBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-4 rounded-md font-medium text-sm transition-colors">
+                                Submit Application
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Company Info -->
+                <div class="bg-white rounded-lg shadow p-6 mt-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">About the Company</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center">
+                            <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                                <span class="text-indigo-600 font-semibold">
+                                    @Model.Organization.DisplayName.Substring(0, 1)
+                                </span>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-gray-900">@Model.Organization.DisplayName</h3>
+                                <p class="text-sm text-gray-600">@Model.Organization.Role</p>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.Organization.Bio))
+                        {
+                            <p class="text-sm text-gray-700">@Model.Organization.Bio</p>
+                        }
+
+                        <div class="pt-3 border-t border-gray-200">
+                            <button class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                View Company Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.getElementById('applicationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const coverLetter = formData.get('coverLetter');
+            const resume = formData.get('resume');
+            const fileError = document.getElementById('fileError');
+
+            // Clear previous errors
+            fileError.classList.add('hidden');
+
+            // Validate cover letter
+            if (!coverLetter.trim()) {
+                showError('Please write a cover letter');
+                return;
+            }
+
+            if (coverLetter.trim().length < 50) {
+                showError('Cover letter must be at least 50 characters long');
+                return;
+            }
+
+            // Validate resume
+            if (!resume || resume.size === 0) {
+                showError('Please upload your resume');
+                return;
+            }
+
+            // Check file size (5MB limit)
+            if (resume.size > 5 * 1024 * 1024) {
+                fileError.textContent = 'Resume file size must be less than 5MB';
+                fileError.classList.remove('hidden');
+                return;
+            }
+
+            // Check file type
+            const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowedTypes.includes(resume.type)) {
+                fileError.textContent = 'Please upload a valid resume file (PDF, DOC, or DOCX)';
+                fileError.classList.remove('hidden');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Submitting...';
+            submitBtn.disabled = true;
+
+            // Add jobId to form data
+            formData.append('jobId', '@Model.Id');
+
+            fetch('/Jobs/Apply', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    showSuccess('Application submitted successfully!');
+                    submitBtn.textContent = '✓ Application Submitted';
+                    submitBtn.className = 'w-full bg-green-600 text-white py-3 px-4 rounded-md font-medium text-sm cursor-not-allowed';
+
+                    // Disable form
+                    const formElements = this.querySelectorAll('input, textarea, button');
+                    formElements.forEach(element => {
+                        element.disabled = true;
+                    });
+                } else {
+                    return response.text().then(text => {
+                        throw new Error(text || 'Application failed');
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showError('Error submitting application. Please try again.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        // File validation on change
+        document.getElementById('resume').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const fileError = document.getElementById('fileError');
+
+            fileError.classList.add('hidden');
+
+            if (file) {
+                // Check file size
+                if (file.size > 5 * 1024 * 1024) {
+                    fileError.textContent = 'File size must be less than 5MB';
+                    fileError.classList.remove('hidden');
+                    this.value = '';
+                    return;
+                }
+
+                // Check file type
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+                if (!allowedTypes.includes(file.type)) {
+                    fileError.textContent = 'Please upload a valid resume file (PDF, DOC, or DOCX)';
+                    fileError.classList.remove('hidden');
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+
+        function saveJob(jobId) {
+            fetch('/Jobs/SaveJob', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]')?.value
+                },
+                body: JSON.stringify({ jobId: jobId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSuccess('Job saved successfully!');
+                    // Update save button appearance
+                    const saveBtn = event.target.closest('button');
+                    saveBtn.querySelector('svg').setAttribute('fill', 'currentColor');
+                    saveBtn.className = 'text-indigo-600 hover:text-indigo-800 p-2 rounded-md transition-colors';
+                } else {
+                    showError('Error saving job');
+                }
+            })
+            .catch(error => {
+                showError('Error saving job');
+            });
+        }
+
+       
+        function shareJob() {
+            if (navigator.share) {
+                navigator.share({
+                    title: '@Model.Title',
+                    text: 'Check out this job opportunity at @Model.Organization.DisplayName',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback - copy to clipboard
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showSuccess('Job link copied to clipboard!');
+                });
+            }
+        }
+
+        function showSuccess(message) {
+            showToast(message, 'success');
+        }
+
+        function showError(message) {
+            showToast(message, 'error');
+        }
+
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+    </script>
+}

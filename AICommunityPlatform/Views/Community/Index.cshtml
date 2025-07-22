@@ -1,0 +1,525 @@
+﻿@model IEnumerable<AICommunityPlatform.Models.Post>
+@{
+    ViewData["Title"] = "Community";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Community</h1>
+                    <p class="text-gray-600">Connect with AI professionals worldwide</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="createPostBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create Post
+                    </button>
+                    <a href="/Community/Members" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Browse Members
+                    </a>
+                    <a href="/Community/Groups" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 919.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        Join Groups
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Feed -->
+            <div class="lg:col-span-2">
+                <!-- Create Post Form (Initially Hidden) -->
+                <div id="createPostForm" class="hidden bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Create a Post</h2>
+                    <form asp-action="CreatePost" method="post" class="space-y-4">
+                        <div>
+                            <textarea name="content" rows="4" required
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                      placeholder="What's on your mind? Share your thoughts with the AI community..."></textarea>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" name="isPublic" value="true" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                    <span class="ml-2 text-sm text-gray-600">Public post</span>
+                                </label>
+                            </div>
+                            <div class="flex space-x-3">
+                                <button type="button" id="cancelPost" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                                    Cancel
+                                </button>
+                                <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700">
+                                    Post
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Posts Feed -->
+                <div class="space-y-6">
+                    @foreach (var post in Model)
+                    {
+                        <div class="bg-white rounded-lg shadow">
+                            <!-- Post Header -->
+                            <div class="p-6 border-b border-gray-200">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start">
+                                        <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
+                                            <span class="text-indigo-600 font-semibold text-sm">
+                                                @post.Author.FirstName.Substring(0, 1)@post.Author.LastName.Substring(0, 1)
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-medium text-gray-900">@post.Author.DisplayName</h3>
+                                            <p class="text-sm text-gray-500">@post.Author.Role • @post.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <button class="text-gray-400 hover:text-gray-600">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Post Content -->
+                            <div class="p-6">
+                                <div class="text-gray-900 text-sm leading-6">
+                                    @Html.Raw(post.Content.Replace("\n", "<br/>"))
+                                </div>
+                            </div>
+
+                            <!-- Post Actions -->
+                            <div class="px-6 py-3 border-t border-gray-200 bg-gray-50">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-6">
+                                        <button onclick="toggleLike(@post.Id)" class="flex items-center text-gray-500 hover:text-indigo-600 transition-colors like-btn" data-post-id="@post.Id">
+                                            <svg class="w-4 h-4 mr-1 like-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                            </svg>
+                                            <span class="text-sm like-count">@post.Likes.Count</span>
+                                        </button>
+
+                                        <button onclick="toggleComments(@post.Id)" class="flex items-center text-gray-500 hover:text-indigo-600 transition-colors">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                                            </svg>
+                                            <span class="text-sm comment-count">@post.Comments.Count</span>
+                                        </button>
+
+                                        <button onclick="sharePost(@post.Id)" class="flex items-center text-gray-500 hover:text-indigo-600 transition-colors">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                                            </svg>
+                                            <span class="text-sm">Share</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Comments Section (Initially Hidden) -->
+                            <div id="comments-@post.Id" class="hidden border-t border-gray-200">
+                                <div class="p-6 space-y-4">
+                                    <div class="comments-list">
+                                        @foreach (var comment in post.Comments.Take(3))
+                                        {
+                                            <div class="flex items-start space-x-3 comment-item">
+                                                <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                                                    <span class="text-gray-600 font-medium text-xs">
+                                                        @comment.User.FirstName.Substring(0, 1)@comment.User.LastName.Substring(0, 1)
+                                                    </span>
+                                                </div>
+                                                <div class="flex-1">
+                                                    <div class="bg-gray-100 rounded-lg px-3 py-2">
+                                                        <p class="text-sm font-medium text-gray-900">@comment.User.DisplayName</p>
+                                                        <p class="text-sm text-gray-700">@comment.Content</p>
+                                                    </div>
+                                                    <p class="text-xs text-gray-500 mt-1">@comment.CreatedAt.ToString("MMM dd, yyyy")</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    @if (post.Comments.Count > 3)
+                                    {
+                                        <button onclick="loadMoreComments(@post.Id)" class="text-sm text-indigo-600 hover:text-indigo-800 font-medium">
+                                            View all @post.Comments.Count comments
+                                        </button>
+                                    }
+
+                                    <!-- Add Comment Form -->
+                                    <div class="flex items-start space-x-3 pt-4 border-t border-gray-100">
+                                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center">
+                                            <span class="text-indigo-600 font-medium text-xs">
+                                                @(User.Identity.Name?.Substring(0, 1).ToUpper() ?? "U")
+                                            </span>
+                                        </div>
+                                        <div class="flex-1">
+                                            <form class="comment-form" data-post-id="@post.Id">
+                                                <textarea name="comment" rows="2" required
+                                                          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm"
+                                                          placeholder="Write a comment..."></textarea>
+                                                <div class="flex justify-end mt-2">
+                                                    <button type="submit" class="px-3 py-1 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700">
+                                                        Comment
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <div class="bg-white rounded-lg shadow p-12 text-center">
+                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">No posts yet</h3>
+                            <p class="text-gray-600 mb-4">Be the first to share something with the community!</p>
+                            <button onclick="document.getElementById('createPostBtn').click()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium">
+                                Create First Post
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Community Stats -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Community Stats</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Total Members</span>
+                            <span class="text-sm font-medium text-gray-900">2,847</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Active Groups</span>
+                            <span class="text-sm font-medium text-gray-900">156</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Posts Today</span>
+                            <span class="text-sm font-medium text-gray-900">23</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm text-gray-600">Your Connections</span>
+                            <span class="text-sm font-medium text-gray-900">45</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trending Topics -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Trending Topics</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-700">#MachineLearning</span>
+                            <span class="text-xs text-gray-500">142 posts</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-700">#OpenAI</span>
+                            <span class="text-xs text-gray-500">98 posts</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-700">#DeepLearning</span>
+                            <span class="text-xs text-gray-500">87 posts</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-700">#NLP</span>
+                            <span class="text-xs text-gray-500">76 posts</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-700">#CareerTips</span>
+                            <span class="text-xs text-gray-500">65 posts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Connections -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Suggested Connections</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-blue-600 font-semibold text-sm">SJ</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Sarah Johnson</h4>
+                                    <p class="text-xs text-gray-500">ML Engineer at Google</p>
+                                </div>
+                            </div>
+                            <button onclick="sendConnectionRequest(1)" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                Connect
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-green-600 font-semibold text-sm">MK</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Michael Kim</h4>
+                                    <p class="text-xs text-gray-500">Data Scientist at Meta</p>
+                                </div>
+                            </div>
+                            <button onclick="sendConnectionRequest(2)" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                Connect
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-purple-600 font-semibold text-sm">AL</span>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-medium text-gray-900">Alex Liu</h4>
+                                    <p class="text-xs text-gray-500">AI Researcher at OpenAI</p>
+                                </div>
+                            </div>
+                            <button onclick="sendConnectionRequest(3)" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                                Connect
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <a href="/Community/Members" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                            View all members →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Create Post Form Toggle
+        document.getElementById('createPostBtn').addEventListener('click', function() {
+            document.getElementById('createPostForm').classList.toggle('hidden');
+        });
+
+        document.getElementById('cancelPost').addEventListener('click', function() {
+            document.getElementById('createPostForm').classList.add('hidden');
+        });
+
+        // Toggle Comments
+        function toggleComments(postId) {
+            const commentsSection = document.getElementById(`comments-${postId}`);
+            commentsSection.classList.toggle('hidden');
+        }
+
+        // Toggle Like
+        function toggleLike(postId) {
+            const likeBtn = document.querySelector(`[data-post-id="${postId}"]`);
+            const likeIcon = likeBtn.querySelector('.like-icon');
+            const likeCount = likeBtn.querySelector('.like-count');
+
+            fetch('/Community/LikePost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `postId=${postId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    likeCount.textContent = data.likeCount;
+
+                    if (data.liked) {
+                        // Liked - fill the heart and change color
+                        likeIcon.setAttribute('fill', 'currentColor');
+                        likeBtn.classList.remove('text-gray-500');
+                        likeBtn.classList.add('text-red-500');
+
+                        // Add animation
+                        likeBtn.classList.add('animate-pulse');
+                        setTimeout(() => likeBtn.classList.remove('animate-pulse'), 500);
+                    } else {
+                        // Unliked - unfill the heart and reset color
+                        likeIcon.setAttribute('fill', 'none');
+                        likeBtn.classList.remove('text-red-500');
+                        likeBtn.classList.add('text-gray-500');
+                    }
+                } else {
+                    showToast('Error processing like', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error processing like', 'error');
+            });
+        }
+
+        // Share Post
+        function sharePost(postId) {
+            fetch('/Community/SharePost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `postId=${postId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Copy share URL to clipboard
+                    navigator.clipboard.writeText(data.shareUrl).then(() => {
+                        showToast('Post link copied to clipboard!', 'success');
+                    }).catch(() => {
+                        // Fallback - show URL in prompt
+                        prompt('Copy this link to share:', data.shareUrl);
+                    });
+                } else {
+                    showToast('Error sharing post', 'error');
+                }
+            })
+            .catch(error => {
+                showToast('Error sharing post', 'error');
+            });
+        }
+
+        // Load More Comments
+        function loadMoreComments(postId) {
+            // For now, just show all comments by revealing hidden ones
+            // In a full implementation, this would make an AJAX call to load more
+            showToast('Load more comments feature coming soon!', 'info');
+        }
+
+        // Send Connection Request
+        function sendConnectionRequest(userId) {
+            showToast('Connection request sent!', 'success');
+        }
+
+        // Comment Forms
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const postId = this.dataset.postId;
+                const commentTextarea = this.querySelector('textarea');
+                const comment = commentTextarea.value.trim();
+
+                if (!comment) {
+                    showToast('Comment cannot be empty', 'error');
+                    return;
+                }
+
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+
+                submitBtn.textContent = 'Posting...';
+                submitBtn.disabled = true;
+
+                fetch('/Community/CommentOnPost', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `postId=${postId}&content=${encodeURIComponent(comment)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Add comment to UI
+                        addCommentToUI(postId, data.comment);
+
+                        // Update comment count
+                        const commentBtn = document.querySelector(`#comments-${postId}`).closest('.bg-white').querySelector('.comment-count');
+                        const currentCount = parseInt(commentBtn.textContent);
+                        commentBtn.textContent = currentCount + 1;
+
+                        // Reset form
+                        commentTextarea.value = '';
+                        showToast('Comment added!', 'success');
+                    } else {
+                        showToast(data.message || 'Error adding comment', 'error');
+                    }
+                })
+                .catch(error => {
+                    showToast('Error adding comment', 'error');
+                })
+                .finally(() => {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        });
+
+        function addCommentToUI(postId, comment) {
+            const commentsContainer = document.querySelector(`#comments-${postId} .comments-list`);
+            const commentHtml = `
+                <div class="flex items-start space-x-3 comment-item">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center">
+                        <span class="text-gray-600 font-medium text-xs">${comment.userInitials}</span>
+                    </div>
+                    <div class="flex-1">
+                        <div class="bg-gray-100 rounded-lg px-3 py-2">
+                            <p class="text-sm font-medium text-gray-900">${comment.userName}</p>
+                            <p class="text-sm text-gray-700">${escapeHtml(comment.content)}</p>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">${comment.createdAt}</p>
+                    </div>
+                </div>
+            `;
+
+            commentsContainer.insertAdjacentHTML('beforeend', commentHtml);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showToast(message, type) {
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                info: 'bg-blue-500'
+            };
+
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-4 py-2 rounded-md text-white z-50 ${colors[type]}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        // Auto-expand textarea
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+        });
+    </script>
+}

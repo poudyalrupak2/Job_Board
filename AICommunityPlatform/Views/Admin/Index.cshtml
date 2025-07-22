@@ -1,0 +1,295 @@
+﻿@model AICommunityPlatform.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_Layout";
+}
+
+<div class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <div class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-6">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
+                    <p class="text-gray-600">System overview and management tools</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/Admin/Settings" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        Settings
+                    </a>
+                    <a href="/Admin/Reports" class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                        <svg class="w-4 h-4 mr-1 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-blue-100 rounded-lg">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Users</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.TotalUsers</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-green-100 rounded-lg">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Active Jobs</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.ActiveJobs</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-purple-100 rounded-lg">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Applications</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.TotalApplications</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="p-2 bg-yellow-100 rounded-lg">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Groups</p>
+                        <p class="text-2xl font-bold text-gray-900">@Model.TotalGroups</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <div class="bg-white rounded-lg shadow mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-5 divide-x divide-gray-200">
+                <a href="/Admin/Users" class="p-6 hover:bg-gray-50 text-center transition-colors">
+                    <div class="flex flex-col items-center">
+                        <svg class="w-8 h-8 text-indigo-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Manage Users</span>
+                        <span class="text-xs text-gray-500">@Model.TotalUsers users</span>
+                    </div>
+                </a>
+
+                <a href="/Admin/Jobs" class="p-6 hover:bg-gray-50 text-center transition-colors">
+                    <div class="flex flex-col items-center">
+                        <svg class="w-8 h-8 text-green-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0V6a2 2 0 002 2h2a2 2 0 002-2V6m-8 0H8m8 0h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 01.293.707V16a2 2 0 01-2 2h-2a2 2 0 01-2-2V6z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Manage Jobs</span>
+                        <span class="text-xs text-gray-500">@Model.TotalJobs jobs</span>
+                    </div>
+                </a>
+
+                <a href="/Admin/Applications" class="p-6 hover:bg-gray-50 text-center transition-colors">
+                    <div class="flex flex-col items-center">
+                        <svg class="w-8 h-8 text-purple-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Applications</span>
+                        <span class="text-xs text-gray-500">@Model.PendingApplications pending</span>
+                    </div>
+                </a>
+
+                <a href="/Admin/Groups" class="p-6 hover:bg-gray-50 text-center transition-colors">
+                    <div class="flex flex-col items-center">
+                        <svg class="w-8 h-8 text-yellow-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Groups</span>
+                        <span class="text-xs text-gray-500">@Model.TotalGroups groups</span>
+                    </div>
+                </a>
+
+                <a href="/Admin/Reports" class="p-6 hover:bg-gray-50 text-center transition-colors">
+                    <div class="flex flex-col items-center">
+                        <svg class="w-8 h-8 text-red-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-900">Reports</span>
+                        <span class="text-xs text-gray-500">Analytics</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Recent Users -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Users</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    @foreach (var user in Model.RecentUsers)
+                    {
+                        <div class="p-4">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center mr-3">
+                                    <span class="text-indigo-600 font-semibold text-sm">
+                                        @user.FirstName.Substring(0, 1)@user.LastName.Substring(0, 1)
+                                    </span>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">@user.DisplayName</p>
+                                    <p class="text-xs text-gray-500">@user.Role • @user.CreatedAt.ToString("MMM dd")</p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent Jobs -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Jobs</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    @foreach (var job in Model.RecentJobs)
+                    {
+                        <div class="p-4">
+                            <div class="flex items-start">
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">@job.Title</p>
+                                    <p class="text-xs text-gray-500">@job.Organization.DisplayName</p>
+                                    <p class="text-xs text-gray-500">@job.PostedDate.ToString("MMM dd, yyyy")</p>
+                                </div>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium @(job.IsActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800")">
+                                    @(job.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Recent Applications -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h3 class="text-lg font-semibold text-gray-900">Recent Applications</h3>
+                </div>
+                <div class="divide-y divide-gray-200">
+                    @foreach (var application in Model.RecentApplications)
+                    {
+                        <div class="p-4">
+                            <div class="flex items-start">
+                                <div class="flex-1">
+                                    <p class="text-sm font-medium text-gray-900">@application.Job.Title</p>
+                                    <p class="text-xs text-gray-500">@application.User.DisplayName</p>
+                                    <p class="text-xs text-gray-500">@application.AppliedDate.ToString("MMM dd, yyyy")</p>
+                                </div>
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium @GetStatusClass(application.Status)">
+                                    @application.Status.ToString()
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+            <!-- Users by Role -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Users by Role</h3>
+                <div class="space-y-4">
+                    @foreach (var userRole in Model.UsersByRole)
+                    {
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">@userRole.Key</span>
+                            <div class="flex items-center">
+                                <div class="w-32 bg-gray-200 rounded-full h-2 mr-3">
+                                    <div class="bg-indigo-600 h-2 rounded-full" style="width: @(userRole.Value * 100 / Model.TotalUsers)%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">@userRole.Value</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Jobs by Type -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Jobs by Type</h3>
+                <div class="space-y-4">
+                    @foreach (var jobType in Model.JobsByType)
+                    {
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">@jobType.Key</span>
+                            <div class="flex items-center">
+                                <div class="w-32 bg-gray-200 rounded-full h-2 mr-3">
+                                    <div class="bg-green-600 h-2 rounded-full" style="width: @(jobType.Value * 100 / Model.TotalJobs)%"></div>
+                                </div>
+                                <span class="text-sm font-medium text-gray-900">@jobType.Value</span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    private string GetStatusClass(AICommunityPlatform.Models.ApplicationStatus status)
+    {
+        return status switch
+        {
+            AICommunityPlatform.Models.ApplicationStatus.Applied => "bg-yellow-100 text-yellow-800",
+            AICommunityPlatform.Models.ApplicationStatus.Viewed => "bg-blue-100 text-blue-800",
+            AICommunityPlatform.Models.ApplicationStatus.Interview => "bg-green-100 text-green-800",
+            AICommunityPlatform.Models.ApplicationStatus.Accepted => "bg-purple-100 text-purple-800",
+            AICommunityPlatform.Models.ApplicationStatus.Rejected => "bg-red-100 text-red-800",
+            _ => "bg-gray-100 text-gray-800"
+        };
+    }
+}
+
+@section Scripts {
+    <script>
+        // Add any admin dashboard specific JavaScript here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-refresh dashboard every 5 minutes
+            setInterval(function() {
+                location.reload();
+            }, 300000);
+        });
+    </script>
+}
