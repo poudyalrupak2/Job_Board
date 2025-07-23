@@ -21,7 +21,7 @@ Users can browse and post jobs, connect with professionals, and chat through an 
 
 ### Getting Started
 ```bash
-git clone https://github.com/your-username/job-board.git
+git clone https://github.com/poudyalrupak2/job-board.git
 ```
 Update your connection string in `Web.config`, run:
 ```powershell
